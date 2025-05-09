@@ -281,16 +281,21 @@ abstract class BoletoAbstract
      */
     protected $logoPath;
 
+    protected $logoBanner;
+    protected $ctaButtonImage;
+    protected $ctaButtonAnchor;
+    protected $ctaButtonLink;
+
     /**
      * Localização do logotipo do banco, referente ao diretório de imagens
      * @var string
      */
     protected $logoBanco;
-
+    
     /**
-     * Array que sera exportada pelo metodo getData
-     * @var array
-     */
+    * Array que sera exportada pelo metodo getData
+    * @var array
+    */
     protected $data;
 
     /**
@@ -1285,6 +1290,50 @@ abstract class BoletoAbstract
         return array();
     }
 
+    public function setLogoBanner($logoBanner)
+    {
+        $this->logoBanner = $logoBanner;
+        return $this;
+    }
+
+    public function getLogoBanner()
+    {
+        return $this->logoBanner;
+    }
+
+    public function setCtaButtonImage($ctaButtonImage)
+    {
+        $this->ctaButtonImage = $ctaButtonImage;
+        return $this;
+    }
+
+    public function getCtaButtonImage()
+    {
+        return $this->ctaButtonImage;
+    }
+
+    public function setCtaButtonAnchor($ctaButtonAnchor)
+    {
+        $this->ctaButtonAnchor = $ctaButtonAnchor;
+        return $this;
+    }
+
+    public function getCtaButtonAnchor()
+    {
+        return $this->ctaButtonAnchor;
+    }
+
+    public function setCtaButtonLink($ctaButtonLink)
+    {
+        $this->ctaButtonLink = $ctaButtonLink;
+        return $this;
+    }
+
+    public function getCtaButtonLink()
+    {
+        return $this->ctaButtonLink;
+    }
+
     /**
      * Retorna o HTML do boleto gerado
      *
@@ -1302,6 +1351,12 @@ abstract class BoletoAbstract
             'cedente_endereco1' => $this->getCedente()->getEndereco(),
             'cedente_endereco2' => $this->getCedente()->getCepCidadeUf(),
             'logo_banco' => $this->getLogoBancoBase64(),
+            
+            'logo_banner' => $this->getLogoBanner(),
+            'cta_button_image' => $this->getCtaButtonImage(),
+            'cta_button_anchor' => $this->getCtaButtonAnchor(),
+	    'cta_button_link' => $this->getCtaButtonLink(),
+
             'logotipo' => $this->getLogoPath(),
             'codigo_banco_com_dv' => $this->getCodigoBancoComDv(),
             'especie' => static::$especie[$this->getMoeda()],
