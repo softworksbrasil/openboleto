@@ -1,25 +1,17 @@
 {
-    "name": "openboleto/openboleto",
+    "name": "softworks/openboleto",
     "type": "library",
-    "description": "Biblioteca para geração de boletos bancários.",
+    "description": "Fork do OpenBoleto com ajustes personalizados",
     "keywords": [
         "boleto",
         "boleto bancario"
     ],
-    "homepage": "http://github.com/openboleto/openboleto",
+    "homepage": "http://github.com/softworks/openboleto",
     "license": "MIT",
     "authors": [
         {
-            "name": "José Frederico",
-            "email": "contato@livetechtecnologia.com.br"
-        },
-        {
-            "name": "Daniel Garajau",
-            "email": "daniel@garajau.com.br"
-        },
-        {
-            "name": "Rogerio Muniz",
-            "email": "rogerio@quilhasoft.com.br"
+            "name": "André Corneta",
+            "email": "andre.corneta@softworksbrasil.com.br"
         }
     ],
     "require": {
