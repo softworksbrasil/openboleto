@@ -69,35 +69,40 @@ class Cresol extends BoletoAbstract
         if (!$incluirDigito) {
             return $numero;
         }
-        $carteira = self::zeroFill($this->getCarteira(), 5); // 5 dígitos
+        $carteira = self::zeroFill($this->getCarteira(), 2); // 2 dígitos
         $dv = $this->digitoVerificadorNossoNumero($carteira, $numero);
         return $numero . $dv;
     }
 
     /**
-     * Calcula o dígito verificador do Nosso Número (2 dígitos, Módulo 11)
+     * Calcula o dígito verificador do Nosso Número (1 dígito, Módulo 11)
      * Baseado em CalculoDV::cresolNossoNumero do laravel-boleto
-     * @param string $carteira Carteira formatada (5 dígitos)
+     * @param string $carteira Carteira formatada (2 dígitos)
      * @param string $numero Número do boleto formatado (11 dígitos)
      * @return string
      */
     protected function digitoVerificadorNossoNumero($carteira, $numero)
     {
-        $base = $carteira . $numero; // Concatena carteira (5) + número (11) = 16 dígitos
+        $base = $carteira . $numero; // Concatena carteira (2) + número (11) = 13 dígitos
         $soma = 0;
         $peso = 2;
 
         // Percorre da direita para a esquerda
         for ($i = strlen($base) - 1; $i >= 0; $i--) {
             $soma += $base[$i] * $peso;
-            $peso = $peso >= 9 ? 2 : $peso + 1;
+            $peso = $peso == 7 ? 2 : $peso + 1;
         }
 
         $resto = $soma % 11;
-        $digito = $resto > 0 ? 11 - $resto : 0;
+        $digito = $resto == 0 ? 0 : 11 - $resto;
+        
+        // Se o dígito for maior que 9, retorna 0 (conforme laravel-boleto)
+        if ($digito > 9) {
+            $digito = 0;
+        }
 
-        // Retorna como 2 dígitos (ex.: "01" ou "00")
-        return sprintf('%02d', $digito);
+        // Retorna como 1 dígito
+        return $digito;
     }
 
     /**
@@ -108,7 +113,7 @@ class Cresol extends BoletoAbstract
     public function gerarNossoNumero()
     {
         $numero = self::zeroFill($this->getSequencial(), 11); // 11 dígitos
-        $carteira = self::zeroFill($this->getCarteira(), 5); // 5 dígitos
+        $carteira = self::zeroFill($this->getCarteira(), 2); // 2 dígitos
         $dv = $this->digitoVerificadorNossoNumero($carteira, $numero);
         return $numero . $dv;
     } 
@@ -120,21 +125,21 @@ class Cresol extends BoletoAbstract
     public function getCampoLivre()
     {
         $agencia = self::zeroFill($this->getAgencia(), 4); // 4 dígitos
-        $carteira = self::zeroFill($this->getCarteira(), 5); // 5 dígitos
-        $nossoNumero = $this->getNossoNumero(true); // 13 dígitos (11 + 2 DV)
-        $cedente = self::zeroFill($this->getConta(), 5); // 5 dígitos (código do cedente)
-
-        // Campo Livre: agência (4) + carteira (5) + Nosso Número (13) + cedente (5)
-        return $agencia . $carteira . $nossoNumero . $cedente;
+        $carteira = self::zeroFill($this->getCarteira(), 2); // 2 dígitos
+        $nossoNumero = self::zeroFill($this->getSequencial(), 11);
+        $conta = self::zeroFill($this->getConta(), 7);
+        
+        // Campo Livre: agência (4) + carteira (2) + Nosso Número (11) + cedente (7) + '0' (1)
+        return $agencia . $carteira . $nossoNumero . $conta . '0';
     }
 
     /**
-     * Retorna o código do cedente formatado (ex.: 1234/12345)
+     * Retorna o código do cedente formatado (ex.: 1234/1234567)
      * @return string
      */
     public function getAgenciaCodigoCedente()
     {
-        return self::zeroFill($this->getAgencia(), 4) . '/' . self::zeroFill($this->getConta(), 5);
+        return self::zeroFill($this->getAgencia(), 4) . '/' . self::zeroFill($this->getConta(), 7);
     }
 
 }
