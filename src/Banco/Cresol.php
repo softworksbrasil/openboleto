@@ -98,7 +98,7 @@ class Cresol extends BoletoAbstract
         
         // Se o dígito for maior que 9, retorna 0 (conforme laravel-boleto)
         if ($digito > 9) {
-            $digito = 0;
+            $digito = "P";
         }
 
         // Retorna como 1 dígito
